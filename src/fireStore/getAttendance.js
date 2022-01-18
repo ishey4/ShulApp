@@ -1,31 +1,23 @@
-import { useState } from 'react'
-import { getFirestore, collection, getDoc, doc, query, where, getDocs } from 'firebase/firestore'
+import { useState, useEffect } from 'react'
+import { getFirestore, collection, getDoc, doc, query, where, getDocs, onSnapshot } from 'firebase/firestore'
 import { fireBase } from '../fireBase'
-import { useEffect } from 'react/cjs/react.development';
 
-export const useGetAttendance = () => {
+
+export const useGetAttendance = (date) => {
     const fireStore = getFirestore(fireBase);
     const coll = collection(fireStore, 'shul');
 
     const [docs,setDocs] = useState([])
 
-    const updateData = () => { 
-        getDocs(q).then(({ docs }) => {
+    const updateData = async () => { 
+        const q = query(coll, where(`${date}.Maariv`, '==', true));
+        onSnapshot(q, ({ docs }) => {
             setDocs(docs)
-        })
+         })
     }
 
-    const q = query(coll, where('test.Maariv', '==', true))
-    useEffect(updateData,[])
+
+    useEffect(() => { updateData() }, []);
 
     return { docs, updateData }
-
-
-    
-
-    window.query = query
-    window.where=where
-    window.col = coll
-    window.getDocs = getDocs
-    window.getDoc = getDoc
  }

@@ -6,6 +6,8 @@ importScripts('https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js')
 // import { onBackgroundMessage } from "firebase/messaging/sw";
 
 
+const broadcast = new BroadcastChannel('channel-123');
+
 const firebaseApp = firebase.initializeApp({
     apiKey: "AIzaSyBTYpqPswzYpqIlf-sfdLoDJroew3hPBCM",
     authDomain: "shulapp.firebaseapp.com",
@@ -20,19 +22,32 @@ const firebaseApp = firebase.initializeApp({
 const messaging = firebase.messaging()
 
 messaging.onBackgroundMessage((payload) => {
-    console.log('[firebase-messaging-sw.js] Received background message ', payload);
-    // Customize notification here
-    const notificationTitle = 'Background Message Title';
-    const notificationOptions = {
-        body: 'Background Message body.',
-        icon: '/firebase-logo.png'
-    };
+    const { data: { title = 'Minyan', body = `Message body.`, minyan } } = payload || {}
 
-    self.registration.showNotification(notificationTitle,
+    const notificationOptions = {
+        body,
+        data:payload,
+        icon: '/firebase-logo.png',
+        actions: [
+            { action: 'PUSH_YES', title: 'Yes', minyan },
+            { action: 'PUSH_NO', title:'No', minyan}     
+        ]
+    };
+    self.registration.getNotifications()
+        .then((notifications) => {
+            notifications.
+                forEach(notification => {
+                    notification.close()
+                })
+        })
+
+    self.registration.showNotification(title,
         notificationOptions);
 });
 
 
-self.addEventListener('notificationclick', (data) => {
-    console.log("notification clicked", {data})
-})
+self.addEventListener('notificationclick', function (e) {
+    const { action, notification: { data: { data: payload } } } = e
+    console.log("in middleman event", { action, payload, e })
+    broadcast.postMessage({ action, payload})
+});
