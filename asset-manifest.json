@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/ShulApp/static/css/main.073c9b0a.css",
-    "main.js": "/ShulApp/static/js/main.8231d1ad.js",
+    "main.js": "/ShulApp/static/js/main.c132ffcb.js",
     "static/js/787.8cc51ce3.chunk.js": "/ShulApp/static/js/787.8cc51ce3.chunk.js",
     "index.html": "/ShulApp/index.html",
     "main.073c9b0a.css.map": "/ShulApp/static/css/main.073c9b0a.css.map",
-    "main.8231d1ad.js.map": "/ShulApp/static/js/main.8231d1ad.js.map",
+    "main.c132ffcb.js.map": "/ShulApp/static/js/main.c132ffcb.js.map",
     "787.8cc51ce3.chunk.js.map": "/ShulApp/static/js/787.8cc51ce3.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.073c9b0a.css",
-    "static/js/main.8231d1ad.js"
+    "static/js/main.c132ffcb.js"
   ]
 }
