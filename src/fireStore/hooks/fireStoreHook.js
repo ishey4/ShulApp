@@ -39,7 +39,7 @@ export const useFireStore = (UID) => {
       setData(data);
 
     } else {
-      setDoc(docRef, data, { merge: true });
+      return setDoc(docRef, data, { merge: true });
     }
   };
 

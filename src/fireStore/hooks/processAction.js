@@ -13,7 +13,8 @@ export const useProcessActions = (UID, date) => {
     const { action, minyan } = parseQueryString(window.location);
     if (action) {
       const itemToPush = { [dateToUse]: { [minyan]: action } };
-      setValue(itemToPush, true);
+      setValue(itemToPush, true).then(() =>
+        window.location.search = '');
     }
   }, []);
 };

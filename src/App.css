@@ -1,14 +1,14 @@
 .App {
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding: 0 30px;
 }
 
 .App h1 {
   text-align: center;
 }
 .group {
-  margin: 0 auto;
+  margin: 25px 0;
   width: 100%;
 }
 
