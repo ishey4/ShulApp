@@ -1,16 +1,19 @@
+
+
 importScripts('https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js');
 importScripts('https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js');
-
-// import { initializeApp } from "firebase/app";
-// import { getMessaging } from "firebase/messaging/sw";
-// import { onBackgroundMessage } from "firebase/messaging/sw";
-
+importScripts('https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js');
 
 const broadcast = new BroadcastChannel('channel-123');
 
-broadcast.onMessage = ({ action, payload }) => {
-    
- }
+let id = '';
+
+broadcast.onmessage = ({ data }) => {
+    const { action, payload } = data;
+    if (action === "SET_ID") {
+        id = payload;
+    }
+}
 
 const firebaseApp = firebase.initializeApp({
     apiKey: "AIzaSyBTYpqPswzYpqIlf-sfdLoDJroew3hPBCM",
@@ -22,28 +25,30 @@ const firebaseApp = firebase.initializeApp({
     measurementId: "G-9HFJLK9Y6X"
 });
 
-const closeAllNotifications = () => 
-    self.registration.getNotifications()
-        .then((notifications) => {
-            notifications.
-                forEach(notification => {
-                    notification.close()
-                })
-        })
-
-
 const messaging = firebase.messaging()
+
+const closeAllNotifications = () => self.registration
+    .getNotifications()
+    .then((notifications) => {
+        notifications.
+            forEach(notification => {
+                notification.close()
+            })
+    })
+
+
 
 messaging.onBackgroundMessage((payload) => {
     const { data: { title = 'Minyan', body = `Message body.`, minyan } } = payload || {}
 
     const notificationOptions = {
         body,
-        data:payload,
+        data: payload,
         icon: '/firebase-logo.png',
         actions: [
-            { action: 'PUSH_YES', title: 'Yes', minyan },
-            { action: 'PUSH_NO', title:'No', minyan}     
+            { action: 'Yes', title: 'Yes', minyan },
+            { action: 'No', title: 'No', minyan },
+            { action: 'Maybe', title: 'Maybe', minyan }
         ]
     };
     closeAllNotifications()
@@ -52,8 +57,13 @@ messaging.onBackgroundMessage((payload) => {
 });
 
 
-self.addEventListener('notificationclick', function (e) {
+self.addEventListener('notificationclick', (e) => {
     const { action, notification: { data: { data: payload } } } = e
     console.log("in middleman event", { action, payload, e })
-    broadcast.postMessage({ action, payload})
+
+    self.clients.openWindow(`/ShulApp?action=${action}&minyan=${payload?.minyan}`).then((data) => {
+        console.log('data', { data })
+        broadcast.postMessage({ action, payload })
+        closeAllNotifications();
+    });
 });

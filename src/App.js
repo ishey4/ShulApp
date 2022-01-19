@@ -1,67 +1,53 @@
-import './App.css';
+import "./App.css";
 
-import moment from 'moment'
+import moment from "moment";
 
-import { useNotification } from './fireStore/notificationHook';
-import { useFireStore } from './fireStore/fireStoreHook';
-import { FireBaseCheckbox } from './fireStore/FireBaseCheckBox';
-import { FireBaseTextBox } from './fireStore/FireBaseTextBox'
-import { useGetAttendance } from './fireStore/getAttendance';
-import { uuidv4 } from './utils'
-import { useProcessActions } from './fireStore/processAction'
+import { useNotification } from "./fireStore/hooks/notificationHook";
+import { useFireStore } from "./fireStore/hooks/fireStoreHook";
+import { FireBaseCheckbox } from "./fireStore/Components/FireBaseCheckBox";
+import { FireBaseTextBox } from "./fireStore/Components/FireBaseTextBox";
+import { useProcessActions } from "./fireStore/hooks/processAction";
+import { Group } from "./Group/Group";
+import { getId } from "./utils/getId";
+import { getUpcomingDavenings } from './utils/getUpcomingDavening'
 
-let deferredPrompt;
 
-window.addEventListener('beforeinstallprompt', (e) => {
-  // Prevent the mini-infobar from appearing on mobile
-  e.preventDefault();
-  // Stash the event so it can be triggered later.
-  deferredPrompt = e;
-  // Update UI notify the user they can install the PWA
-  //showInstallPromotion();
-  // Optionally, send analytics event that PWA install promo was shown.
-  alert(`'beforeinstallprompt' event was fired.`);
-});
-
-const getId = () => {
-  const id = window.localStorage.getItem('id') || uuidv4();
-  localStorage.setItem('id', id)
-  return id
- }
 
 const id = getId();
 
 const App = () => {
-  const date = moment(new Date()).format("MMDDYYYY")
+  const date = moment(new Date()).format("MM/DD/YYYY");
 
-  const { data, updateData: updateFireStore } = useFireStore(id)
-  const { setNotifications, notificationsEnabled, isSupported } = useNotification(id)
-  const { docs, updateData: updateAttendanceData } = useGetAttendance(date);
+  const { setNotifications, isSupported, isRegistered } = useNotification(id);
+  useProcessActions(id, date);
 
-  useProcessActions(id, date)
+  const buttonText = isRegistered
+    ? "Disable Notifications"
+    : "Enable Notifications";
+
+  const davenings = getUpcomingDavenings();
 
   return (
     <div className="App">
-      <h1>Shul App { date }
+      <h1>
+        <span>Minyan App</span>
       </h1>
-      
-      <div>{isSupported && <label>
-        <input
-          type={"checkbox"}
-          checked={notificationsEnabled}
-          onChange={({ target }) => { setNotifications(target?.checked) }}
-        /> Enable Notification
-      </label>}</div>
-      <div><FireBaseTextBox field="Name" placeholder="Name" UID={id} /></div>
-      <div><FireBaseTextBox field="Email" placeholder="Email" type='Email' UID={id} /></div>
 
-      <div><label> <FireBaseCheckbox field="Mincha" UID={id} date={date} /> I Will Be At Shacharit</label></div>
-      <div><label> <FireBaseCheckbox field="Maariv" UID={id} date={date} />I Will Be At Maariv</label></div>
-
-      
-      <div>Yes: {docs?.length || 0}</div>
+      {davenings.map((a) => <Group {...a} />)}
+      <div className="configGroup">
+        <div className="nameInput">
+          <FireBaseTextBox field="Name" placeholder="Name" UID={id} />
+        </div>
+        <div className={`notifications ${isRegistered ? "selected" : ""}`}>
+          {isSupported && (
+            <button onClick={() => setNotifications(!isRegistered)}>
+              {buttonText}
+            </button>
+          )}
+        </div>
+      </div>
     </div>
   );
-}
+};
 
 export default App;
