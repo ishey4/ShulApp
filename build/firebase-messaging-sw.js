@@ -47,8 +47,8 @@ messaging.onBackgroundMessage((payload) => {
         icon: '/firebase-logo.png',
         actions: [
             { action: 'Yes', title: 'Yes', minyan },
+            { action: 'Maybe', title: 'Maybe', minyan },
             { action: 'No', title: 'No', minyan },
-            { action: 'Maybe', title: 'Maybe', minyan }
         ]
     };
     closeAllNotifications()

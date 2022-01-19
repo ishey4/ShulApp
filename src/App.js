@@ -30,8 +30,9 @@ const App = () => {
       <h1>Minyan App</h1>
       {davenings.map((davening) => <Group {...davening} />)}
       <div className="configGroup">
-        <div className="nameInput">
+        <div className="inputs">
           <FireBaseTextBox field="Name" placeholder="Name" UID={id} />
+          <FireBaseTextBox field="Phone" placeholder="Phone #" UID={id} />
         </div>
         <div className={`notifications ${isRegistered ? "selected" : ""}`}>
           {isSupported && (

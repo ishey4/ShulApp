@@ -14,6 +14,7 @@ export const useGetAttendance = (date, prayer, value) => {
   const coll = collection(fireStore, "shul");
 
   const [docs, setDocs] = useState([]);
+  const [people, setPeople] = useState([])
 
   const updateData = async () => {
     const q = query(coll, where(`${date}.${prayer}`, "==", value));
@@ -22,5 +23,12 @@ export const useGetAttendance = (date, prayer, value) => {
 
   useEffect(updateData, []);
 
-  return { docs };
+  useEffect(async () => {
+    const promiseArray = docs.map((doc) => doc.data())
+    const namesArray = await Promise.all(promiseArray)
+    setPeople(namesArray)
+
+  }, [docs])
+
+  return { docs, people };
 };

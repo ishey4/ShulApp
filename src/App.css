@@ -27,8 +27,26 @@ button.selected {
   text-align: left;
 }
 
+.buttons {
+  display: flex;
+  flex-direction: row;
+}
+
+.group .buttonWrapper {
+  width: calc(33% - 30px);
+  margin: 0 15px;
+}
+.group .peopleList {
+  text-align: center;
+  font-size: 20px;
+}
+
+.group .peopleList > * {
+  margin: 10px 0;
+}
+
 .group button {
-  width: calc(33% - 20px);
+  width: 100%;
 }
 
 .notifications {
@@ -61,7 +79,8 @@ button.selected {
   border-color: black;
 }
 
-.configGroup .nameInput {
+.configGroup .inputs {
   display: flex;
   justify-content: space-around;
+  flex-direction: column;
 }

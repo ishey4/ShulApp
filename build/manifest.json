@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Minyan App",
+  "name": "Minyan attendance",
   "icons": [
     {
       "src": "favicon.ico",
