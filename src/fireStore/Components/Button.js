@@ -1,6 +1,5 @@
 import { useFireStore } from "../hooks/fireStoreHook";
 import { useGetAttendance } from "../hooks/getAttendance";
-import moment from "moment";
 
 export const FireStoreButton = ({ prayer, date, value, id }) => {
 

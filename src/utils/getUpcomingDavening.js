@@ -1,16 +1,19 @@
 import moment from "moment";
 
+const prayersAvailable = ["Shacharis", "Maariv"];
+
+const prayerCount = prayersAvailable.length
 
 const modifierMap = {
-  before8AM: (ary) => ary.slice(0, 2),
-  after8AM: (ary) => ary.slice(1, 3),
-  after9PM: (ary) => ary.slice(2, 4)
+  before8AM: (ary) => ary.slice(0, prayerCount),
+  after8AM: (ary) => ary.slice(1, prayerCount + 1),
+  after9PM: (ary) => ary.slice(prayerCount, prayerCount * 2)
 }
 
 export const getUpcomingDavenings = () => {
   const today = moment(new Date()).format("MMDDYYYY");
   const tomorrow = moment(new Date()).add(1, "day").format("MMDDYYYY");
-  const types = ["Shacharis", "Maariv"];
+
 
   const now = moment(new Date);
   let after8AM = now.isAfter(moment("08:00", 'HH:mm'));
@@ -20,10 +23,10 @@ export const getUpcomingDavenings = () => {
   const modifierFunction = modifierMap[modifierValue]
 
   const daveningArray = [
-    ...types.map((prayer) => ({
+    ...prayersAvailable.map((prayer) => ({
       prayer, date: today
     })),
-    ...types.map((prayer) => ({
+    ...prayersAvailable.map((prayer) => ({
       prayer, date: tomorrow
     }))
   ];

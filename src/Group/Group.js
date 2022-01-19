@@ -2,6 +2,8 @@ import { FireStoreButton } from "../fireStore/Components/Button.js";
 import { getId } from "../utils/getId";
 import { dateToFormattedDate } from '../utils/dateToFormattedDate'
 
+const buttonValues = ['Yes', 'No', 'Maybe']
+
 export const Group = (props) => {
   const id = getId();
   const { prayer, date } = props;
@@ -13,9 +15,7 @@ export const Group = (props) => {
         {prayer} ({dateToDisplay})
       </div>
       <div className="buttons">
-        <FireStoreButton {...{ ...props, value: "Yes", id }} />
-        <FireStoreButton {...{ ...props, value: "No", id }} />
-        <FireStoreButton {...{ ...props, value: "Maybe", id }} />
+        {buttonValues.map((value) => <FireStoreButton {...{ ...props, value, id }} />)}
       </div>
     </div>
   );

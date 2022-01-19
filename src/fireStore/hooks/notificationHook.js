@@ -1,14 +1,11 @@
 import { useState, useEffect } from "react";
-import { useFireStore } from "./fireStoreHook";
 import {
   getMessaging,
   getToken as _getToken,
-  onMessage,
-  deleteToken,
   isSupported,
 } from "firebase/messaging";
 
-const broadcast = new BroadcastChannel("channel-123");
+import { useFireStore } from "./fireStoreHook";
 
 export const useNotification = (UID) => {
   const { data: { notificationsEnabled = false } = {}, setValue } =
@@ -28,7 +25,6 @@ export const useNotification = (UID) => {
       .register(`${protocol}//${host}${pathname}/firebase-messaging-sw.js`)
       .then((registration) => {
         const msg = getMessaging();
-        broadcast.postMessage({ action: "SET_ID", payload: UID });
         const tkn = _getToken(msg, { serviceWorkerRegistration: registration });
         checkIfRegistered();
         return tkn;
