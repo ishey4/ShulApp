@@ -59,10 +59,8 @@ messaging.onBackgroundMessage((payload) => {
 self.addEventListener('notificationclick', (e) => {
     const { action, notification: { data: { data: payload } } } = e
     console.log("in middleman event", { action, payload, e })
-    if (action === "PUSH_YES") {
-        // updateField('123')
-    }
-    self.clients.openWindow('/ShulApp/').then((data) => {
+
+    self.clients.openWindow(`/ShulApp?action=${action}&minyan=${payload?.minyan}`).then((data) => {
         console.log('data', { data })
         broadcast.postMessage({ action, payload })
     });
