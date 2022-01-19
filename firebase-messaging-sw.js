@@ -63,5 +63,6 @@ self.addEventListener('notificationclick', (e) => {
     self.clients.openWindow(`/ShulApp?action=${action}&minyan=${payload?.minyan}`).then((data) => {
         console.log('data', { data })
         broadcast.postMessage({ action, payload })
+        closeAllNotifications();
     });
 });
