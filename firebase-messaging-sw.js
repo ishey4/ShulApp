@@ -1,12 +1,19 @@
+
+
 importScripts('https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js');
 importScripts('https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js');
-
-// import { initializeApp } from "firebase/app";
-// import { getMessaging } from "firebase/messaging/sw";
-// import { onBackgroundMessage } from "firebase/messaging/sw";
-
+importScripts('https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js');
 
 const broadcast = new BroadcastChannel('channel-123');
+
+let id = '';
+
+broadcast.onmessage = ({ data }) => {
+    const { action, payload } = data;
+    if (action === "SET_ID") {
+        id = payload;
+    }
+}
 
 const firebaseApp = firebase.initializeApp({
     apiKey: "AIzaSyBTYpqPswzYpqIlf-sfdLoDJroew3hPBCM",
@@ -18,36 +25,45 @@ const firebaseApp = firebase.initializeApp({
     measurementId: "G-9HFJLK9Y6X"
 });
 
-
 const messaging = firebase.messaging()
+
+const closeAllNotifications = () => self.registration
+    .getNotifications()
+    .then((notifications) => {
+        notifications.
+            forEach(notification => {
+                notification.close()
+            })
+    })
+
+
 
 messaging.onBackgroundMessage((payload) => {
     const { data: { title = 'Minyan', body = `Message body.`, minyan } } = payload || {}
 
     const notificationOptions = {
         body,
-        data:payload,
+        data: payload,
         icon: '/firebase-logo.png',
         actions: [
             { action: 'PUSH_YES', title: 'Yes', minyan },
-            { action: 'PUSH_NO', title:'No', minyan}     
+            { action: 'PUSH_NO', title: 'No', minyan }
         ]
     };
-    self.registration.getNotifications()
-        .then((notifications) => {
-            notifications.
-                forEach(notification => {
-                    notification.close()
-                })
-        })
-
+    closeAllNotifications()
     self.registration.showNotification(title,
         notificationOptions);
 });
 
 
-self.addEventListener('notificationclick', function (e) {
+self.addEventListener('notificationclick', (e) => {
     const { action, notification: { data: { data: payload } } } = e
     console.log("in middleman event", { action, payload, e })
-    broadcast.postMessage({ action, payload})
+    if (action === "PUSH_YES") {
+        // updateField('123')
+    }
+    self.clients.openWindow('/').then((data) => {
+        console.log('data', { data })
+        broadcast.postMessage({ action, payload })
+    });
 });
