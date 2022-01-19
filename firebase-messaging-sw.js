@@ -62,7 +62,7 @@ self.addEventListener('notificationclick', (e) => {
     if (action === "PUSH_YES") {
         // updateField('123')
     }
-    self.clients.openWindow('/').then((data) => {
+    self.clients.openWindow('/ShulApp/').then((data) => {
         console.log('data', { data })
         broadcast.postMessage({ action, payload })
     });
