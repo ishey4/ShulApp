@@ -10,7 +10,7 @@ const modifierMap = {
   after9PM: (ary) => ary.slice(prayerCount, prayerCount * 2)
 }
 
-export const getUpcomingDavenings = () => {
+export const getUpcomingDavenings = (count) => {
   const today = moment(new Date()).format("MMDDYYYY");
   const tomorrow = moment(new Date()).add(1, "day").format("MMDDYYYY");
 
@@ -24,10 +24,10 @@ export const getUpcomingDavenings = () => {
 
   const daveningArray = [
     ...prayersAvailable.map((prayer) => ({
-      prayer, date: today
+      prayer, date: today, count
     })),
     ...prayersAvailable.map((prayer) => ({
-      prayer, date: tomorrow
+      prayer, date: tomorrow, count
     }))
   ];
 

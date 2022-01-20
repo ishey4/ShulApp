@@ -1,13 +1,5 @@
 import { useEffect, useState } from "react";
-
-import {
-  getFirestore,
-  collection,
-  getDoc,
-  doc,
-  setDoc,
-  onSnapshot,
-} from "firebase/firestore";
+import { getFirestore, collection, doc, setDoc, onSnapshot } from "firebase/firestore";
 
 import { fireBase } from "../../fireBase";
 

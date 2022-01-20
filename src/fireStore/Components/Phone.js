@@ -4,6 +4,6 @@ export const PhoneLink = ({ phoneNumber, children }) => {
   const showNames = parseQueryString(window.location)?.showNames
 
   return showNames ?
-    phoneNumber ? <a href={`tel:${phoneNumber}`}> {children} </a> : <div>{children}</div>
+    phoneNumber ? <div><a href={`tel:${phoneNumber}`}> {children} </a></div> : <div>{children}</div>
     : null
 }

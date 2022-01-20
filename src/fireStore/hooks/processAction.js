@@ -3,6 +3,7 @@ import { useEffect } from "react";
 
 import { useFireStore } from "./fireStoreHook";
 import { parseQueryString } from '../../utils/parseQueryString'
+import { stringifyQueryString } from '../../utils/stringifyQueryString'
 
 
 export const useProcessActions = (UID, date) => {
@@ -10,11 +11,13 @@ export const useProcessActions = (UID, date) => {
   const dateToUse = moment(date).format("MMDDYYYY");
 
   useEffect(() => {
-    const { action, minyan } = parseQueryString(window.location);
+    const { action, minyan, date = dateToUse, ...rest } = parseQueryString(window.location);
+
     if (action) {
-      const itemToPush = { [dateToUse]: { [minyan]: action } };
-      setValue(itemToPush, true).then(() =>
-        window.location.search = '');
+      const itemToPush = { [date]: { [minyan]: { value: action } } };
+      setValue(itemToPush, true).then(() => {
+        window.location.search = stringifyQueryString(rest)
+      });
     }
   }, []);
 };

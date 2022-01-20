@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+
+import { serviceWorkerPath } from '../../fireBase'
 import {
   getMessaging,
   getToken as _getToken,
@@ -20,9 +22,10 @@ export const useNotification = (UID) => {
     });
 
   const enablePushNotifications = () => {
-    const { protocol, host, pathname } = window.location;
+    console.log("serviceWorkerPath", { serviceWorkerPath })
+
     return navigator.serviceWorker
-      .register(`${protocol}//${host}${pathname}/firebase-messaging-sw.js`)
+      .register(serviceWorkerPath)
       .then((registration) => {
         const msg = getMessaging();
         const tkn = _getToken(msg, { serviceWorkerRegistration: registration });

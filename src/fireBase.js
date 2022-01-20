@@ -1,21 +1,18 @@
 import { initializeApp } from "firebase/app";
 
-//import { getAnalytics } from "firebase/analytics";
+import { firebaseConfig as fireBaseDev } from "./fireBase.dev";
+import { firebaseConfig as fireBaseProd } from "./fireBase.prod";
 
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { parseQueryString } from "./utils/parseQueryString";
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyBTYpqPswzYpqIlf-sfdLoDJroew3hPBCM",
-  authDomain: "shulapp.firebaseapp.com",
-  projectId: "shulapp",
-  storageBucket: "shulapp.appspot.com",
-  messagingSenderId: "329842802875",
-  appId: "1:329842802875:web:77da65c4775da3d9f8a99e",
-  measurementId: "G-9HFJLK9Y6X",
-};
+const { protocol, host, pathname, search } = window.location
 
-// Initialize Firebase
-export const fireBase = initializeApp(firebaseConfig);
+const { env } = parseQueryString({ search })
+
+const envName = env === 'dev' ? 'dev' : 'prod'
+
+const configToUse = envName === 'dev' ? fireBaseDev : fireBaseProd
+
+export const fireBase = initializeApp(configToUse);
+export const serviceWorkerPath = `${protocol}//${host}${pathname}/firebase-messaging-sw.${envName}.js`
+
