@@ -23,8 +23,8 @@ export const useGetAttendance = (date, prayer, value) => {
   };
 
   const calculateAttendance = (docs) => docs.reduce((acc, doc) => {
-    const { Count = 1 } = doc?.[date]?.[prayer]
-    return acc + Count
+    const { Count = 1 } = doc?.[date]?.[prayer] || {}
+    return acc + (Count || 1)
   }, 0)
 
   useEffect(updateData, []);
