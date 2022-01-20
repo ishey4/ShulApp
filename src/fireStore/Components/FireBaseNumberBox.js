@@ -21,6 +21,7 @@ export const FireBaseNumberBox = ({ field, UID, placeholder, type = "number" }) 
       placeholder={placeholder}
       value={val || 0}
       onChange={onChange}
+      min={1}
     />
   )
 };

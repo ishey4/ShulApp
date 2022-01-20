@@ -7,7 +7,9 @@ export const FireStoreButton = ({ prayer, date, value, id, count }) => {
 
   const { people, attendance } = useGetAttendance(date, prayer, value);
 
-  const { Count: myAttendance, value: myValue } = data?.[date]?.[prayer] || {}
+  const { Count, value: myValue } = data?.[date]?.[prayer] || {}
+  const myAttendance = Count || 1
+
   const countAsNumber = parseInt(count, 10) || 0
   const isSelected = value === myValue
   const displayAttendance = !isSelected ? attendance : attendance - myAttendance
@@ -18,7 +20,7 @@ export const FireStoreButton = ({ prayer, date, value, id, count }) => {
 
   return (<div className="buttonWrapper">
     <button onClick={onClick} className={className}>
-      {value} ({displayAttendance}) {isSelected && `+ ${myAttendance}` || ''}
+      {value} ({displayAttendance}) {isSelected && `+ ${myAttendance || 1}` || ''}
     </button>
     <div className="peopleList">
       {people.map(({ Name, Phone, ...rest }) => <PhoneLink phoneNumber={Phone}>{Name} ({rest?.[date]?.[prayer]?.Count || 1})</PhoneLink>)}
