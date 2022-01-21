@@ -10,8 +10,12 @@ import {
 import { useFireStore } from "./fireStoreHook";
 
 export const useNotification = (UID) => {
-  const { data: { notificationsEnabled = false } = {}, setValue } =
-    useFireStore(UID);
+  const {
+    data: {
+      notificationsEnabled = false,
+      isLoading: fireBaseLoading
+    } = {},
+    setValue } = useFireStore(UID);
 
   const [_isSupported, setIsSupported] = useState(false);
   const [isRegistered, setIsRegistered] = useState(false);
@@ -19,14 +23,15 @@ export const useNotification = (UID) => {
 
   const checkIfRegistered = () =>
     navigator.serviceWorker.getRegistrations().then((registrations) => {
-      setIsRegistered(!!registrations.length);
+      setIsRegistered(!!registrations.length && notificationsEnabled);
     });
 
   const enablePushNotifications = () => navigator.serviceWorker
     .register(serviceWorkerPath)
-    .then((registration) => {
+    .then(async (registration) => {
       const msg = getMessaging();
-      const tkn = _getToken(msg, { serviceWorkerRegistration: registration });
+      const tkn = await _getToken(msg, { serviceWorkerRegistration: registration });
+      setValue({ token: tkn, notificationsEnabled: true })
       checkIfRegistered();
       return tkn;
     });
@@ -56,13 +61,13 @@ export const useNotification = (UID) => {
   useEffect(() => {
     setIsSupported(isSupported());
     checkIfRegistered();
-  }, []);
+  }, [notificationsEnabled]);
 
   return {
     setNotifications,
     notificationsEnabled,
     isSupported: _isSupported,
     isRegistered,
-    isLoading
+    isLoading: isLoading || fireBaseLoading
   };
 };

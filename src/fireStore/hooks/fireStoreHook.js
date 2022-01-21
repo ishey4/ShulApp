@@ -6,14 +6,17 @@ import { fireBase } from "../../fireBase";
 export const useFireStore = (UID) => {
   const [debounce, setDebounce] = useState();
   const [data, setData] = useState({});
+  const [isLoading, setIsLoading] = useState(false)
 
   const fireStore = getFirestore(fireBase);
   const coll = collection(fireStore, "shul");
   const docRef = doc(coll, UID);
 
   const updateData = async () => {
+    setIsLoading(true);
     onSnapshot(docRef, (doc) => {
       setData(doc.data());
+      setIsLoading(false)
     });
   };
 
@@ -35,5 +38,5 @@ export const useFireStore = (UID) => {
     }
   };
 
-  return { data, setValue, updateData };
+  return { data, setValue, updateData, isLoading };
 };
