@@ -37,7 +37,6 @@ messaging.onBackgroundMessage((payload) => {
         actions: [
             { action: 'Yes', title: 'Yes', minyan },
             { action: 'No', title: 'No', minyan },
-            { action: 'Maybe', title: 'Maybe', minyan },
         ]
     };
 
@@ -48,7 +47,7 @@ messaging.onBackgroundMessage((payload) => {
 
 
 self.addEventListener('notificationclick', (e) => {
-    const { action, notification: { data: { data: { minyan, date } } } } = e
+    const { action, notification: { data: { data: { minyan, dateOffset } } } } = e
 
-    self.clients.openWindow(`/ShulApp?action=${action}&minyan=${minyan}&date=${date}&env=dev`).then(closeAllNotifications);
+    self.clients.openWindow(`/ShulApp?action=${action}&minyan=${minyan}&dateOffset=${dateOffset}&env=dev`).then(closeAllNotifications);
 });
