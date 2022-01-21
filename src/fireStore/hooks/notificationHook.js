@@ -15,6 +15,7 @@ export const useNotification = (UID) => {
 
   const [_isSupported, setIsSupported] = useState(false);
   const [isRegistered, setIsRegistered] = useState(false);
+  const [isLoading, setIsLoading] = useState(false)
 
   const checkIfRegistered = () =>
     navigator.serviceWorker.getRegistrations().then((registrations) => {
@@ -43,11 +44,13 @@ export const useNotification = (UID) => {
   };
 
   const setNotifications = async (isEnabled) => {
+    setIsLoading(true)
     const token = isEnabled
       ? await enablePushNotifications()
       : await unregister();
 
     setValue({ notificationsEnabled: isEnabled, token });
+    setIsLoading(false)
   };
 
   useEffect(() => {
@@ -60,5 +63,6 @@ export const useNotification = (UID) => {
     notificationsEnabled,
     isSupported: _isSupported,
     isRegistered,
+    isLoading
   };
 };

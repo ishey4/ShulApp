@@ -87,3 +87,22 @@ button.selected {
 .inputs [type="number"] {
   width: 45px;
 }
+
+.animated-gradient {
+  background: repeating-linear-gradient(to right, white 0%, lightgray 100%);
+  width: 100%;
+  background-size: 200% auto;
+  background-position: 0 100%;
+  animation: gradient 1s infinite;
+  animation-fill-mode: forwards;
+  animation-timing-function: linear;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
