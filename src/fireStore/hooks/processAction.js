@@ -8,13 +8,14 @@ import { stringifyQueryString } from '../../utils/stringifyQueryString'
 
 export const useProcessActions = (UID, date) => {
   const { setValue } = useFireStore(UID);
-  const dateToUse = moment(date).format("MMDDYYYY");
+
 
   useEffect(() => {
-    const { action, minyan, date = dateToUse, ...rest } = parseQueryString(window.location);
+    const { action, minyan, dateOffset = 0, ...rest } = parseQueryString(window.location);
+    const dateToUse = moment(date).add(dateOffset, 'day').format("MMDDYYYY");
 
     if (action) {
-      const itemToPush = { [date]: { [minyan]: { value: action } } };
+      const itemToPush = { [dateToUse]: { [minyan]: { value: action } } };
       setValue(itemToPush, true).then(() => {
         window.location.search = stringifyQueryString(rest)
       });

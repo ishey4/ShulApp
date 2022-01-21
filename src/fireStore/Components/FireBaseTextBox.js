@@ -10,10 +10,7 @@ export const FireBaseTextBox = ({ field, UID, placeholder, type = "text" }) => {
     setValue(newVal);
   };
 
-  const onChange = ({ target }) => {
-    console.log(target?.checked);
-    _setValue(target?.value);
-  }
+  const onChange = ({ target }) => _setValue(target?.value)
 
   return (
     <input

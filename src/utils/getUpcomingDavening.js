@@ -16,8 +16,8 @@ export const getUpcomingDavenings = (count) => {
 
 
   const now = moment(new Date);
-  let after8AM = now.isAfter(moment("08:00", 'HH:mm'));
-  let after9PM = now.isAfter(moment("20:00", 'HH:mm'));
+  const after8AM = now.isAfter(moment("08:00", 'HH:mm'));
+  const after9PM = now.isAfter(moment("21:00", 'HH:mm'));
 
   const modifierValue = after8AM ? after9PM ? 'after9PM' : 'after8AM' : 'before8AM'
   const modifierFunction = modifierMap[modifierValue]

@@ -21,26 +21,24 @@ export const useNotification = (UID) => {
       setIsRegistered(!!registrations.length);
     });
 
-  const enablePushNotifications = () => {
-    console.log("serviceWorkerPath", { serviceWorkerPath })
-
-    return navigator.serviceWorker
-      .register(serviceWorkerPath)
-      .then((registration) => {
-        const msg = getMessaging();
-        const tkn = _getToken(msg, { serviceWorkerRegistration: registration });
-        checkIfRegistered();
-        return tkn;
-      });
-  };
+  const enablePushNotifications = () => navigator.serviceWorker
+    .register(serviceWorkerPath)
+    .then((registration) => {
+      const msg = getMessaging();
+      const tkn = _getToken(msg, { serviceWorkerRegistration: registration });
+      checkIfRegistered();
+      return tkn;
+    });
 
   const unregister = async () => {
     const { protocol, host, pathname } = window.location;
     const sw = await navigator.serviceWorker.getRegistration(
       `${protocol}//${host}${pathname}/firebase-messaging-sw.js`
     );
+
     await sw?.unregister();
     checkIfRegistered();
+
     return null;
   };
 
@@ -48,6 +46,7 @@ export const useNotification = (UID) => {
     const token = isEnabled
       ? await enablePushNotifications()
       : await unregister();
+
     setValue({ notificationsEnabled: isEnabled, token });
   };
 

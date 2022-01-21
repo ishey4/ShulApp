@@ -11,8 +11,6 @@ export const Group = (props) => {
 
   const { data: { Count = 0 } = {} } = useFireStore(id)
 
-  console.log("data", { Count })
-
   return (
     <div className="group">
       <div className="text">
