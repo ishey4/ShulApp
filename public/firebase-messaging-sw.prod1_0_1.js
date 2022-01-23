@@ -27,7 +27,7 @@ const closeAllNotifications = () => self.registration
 
 
 
-messaging.onBackgroundMessage((payload) => {
+messaging.onBackgroundMessage(async (payload) => {
     const { data: { title = 'Minyan', body = `Message body.`, minyan } } = payload || {}
 
     const notificationOptions = {
@@ -39,13 +39,13 @@ messaging.onBackgroundMessage((payload) => {
         ]
     };
 
-    closeAllNotifications()
+    await closeAllNotifications()
     self.registration.showNotification(title, notificationOptions);
 });
 
 
 self.addEventListener('notificationclick', (e) => {
-    const { action, notification: { data: { data: { minyan, date } } } } = e
+    const { action, notification: { data: { data: { minyan, dateOffset } } } } = e
 
     self.clients.openWindow(`/ShulApp?action=${action}&minyan=${minyan}&dateOffset=${dateOffset}`).then(closeAllNotifications);
 });

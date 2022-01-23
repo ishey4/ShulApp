@@ -1,9 +1,11 @@
+import moment from "moment";
 import { useFireStore } from "../hooks/fireStoreHook";
 import { useGetAttendance } from "../hooks/getAttendance";
 import { PhoneLink } from './Phone'
 
 export const FireStoreButton = ({ prayer, date, value, id, count }) => {
   const { setValue, data } = useFireStore(id);
+  const currentTime = moment(new Date).format('YYYY-MM-DD HH:mm:ss')
 
   const { people, attendance } = useGetAttendance(date, prayer, value);
 
@@ -15,7 +17,7 @@ export const FireStoreButton = ({ prayer, date, value, id, count }) => {
   const displayAttendance = !isSelected ? attendance : attendance - myAttendance
 
 
-  const onClick = () => setValue({ [date]: { [prayer]: { value, Count: countAsNumber } } });
+  const onClick = () => setValue({ [date]: { [prayer]: { value, Count: countAsNumber, currentTime, method: "Click" } } });
   const className = data?.[date]?.[prayer]?.value === value ? "selected" : "";
 
   return (<div className="buttonWrapper">

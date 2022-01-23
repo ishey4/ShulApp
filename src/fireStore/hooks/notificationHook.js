@@ -12,10 +12,12 @@ import { useFireStore } from "./fireStoreHook";
 export const useNotification = (UID) => {
   const {
     data: {
-      notificationsEnabled = false,
+      notificationsEnabled,
       isLoading: fireBaseLoading
     } = {},
     setValue } = useFireStore(UID);
+
+  const { data: { currentSWVersion } } = useFireStore('appInfo');
 
   const [_isSupported, setIsSupported] = useState(false);
   const [isRegistered, setIsRegistered] = useState(false);
@@ -23,11 +25,15 @@ export const useNotification = (UID) => {
 
   const checkIfRegistered = () =>
     navigator.serviceWorker.getRegistrations().then((registrations) => {
-      setIsRegistered(!!registrations.length && notificationsEnabled);
+      const installedSWVersion = registrations?.[0]?.active?.scriptURL?.match?.(/(?:(prod|dev)[^\.]+)/g)[0]
+
+      setValue({ userSWVersion: installedSWVersion })
+      setIsRegistered(!!registrations.length);
+
     });
 
-  const enablePushNotifications = () => navigator.serviceWorker
-    .register(serviceWorkerPath)
+  const enablePushNotifications = (serviceWorkerURL = '') => navigator.serviceWorker
+    .register(serviceWorkerPath(serviceWorkerURL || currentSWVersion))
     .then(async (registration) => {
       const msg = getMessaging();
       const tkn = await _getToken(msg, { serviceWorkerRegistration: registration });
@@ -37,21 +43,22 @@ export const useNotification = (UID) => {
     });
 
   const unregister = async () => {
-    const { protocol, host, pathname } = window.location;
-    const sw = await navigator.serviceWorker.getRegistration(
-      `${protocol}//${host}${pathname}/firebase-messaging-sw.js`
+    await navigator.serviceWorker.getRegistrations().then((registrations) => {
+      registrations.forEach(registration => {
+        registration.unregister().then(() => setValue({ token: null, notificationsEnabled: false }))
+      })
+    }
     );
 
-    await sw?.unregister();
     checkIfRegistered();
 
     return null;
   };
 
-  const setNotifications = async (isEnabled) => {
+  const setNotifications = async (isEnabled, serviceWorkerURL = "") => {
     setIsLoading(true)
     const token = isEnabled
-      ? await enablePushNotifications()
+      ? await enablePushNotifications(serviceWorkerURL)
       : await unregister();
 
     setValue({ notificationsEnabled: isEnabled, token });

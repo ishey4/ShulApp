@@ -7,6 +7,7 @@ import { Group } from "./Group/Group";
 import { getId } from "./utils/getId";
 import { getUpcomingDavenings } from './utils/getUpcomingDavening'
 import { ConfigArea } from "./configArea/ConfigArea";
+import { useCheckVersion } from './fireStore/hooks/checkVersion'
 
 
 
@@ -17,6 +18,7 @@ const App = () => {
     const davenings = getUpcomingDavenings();
 
     useProcessActions(id, date);
+    useCheckVersion(id)
 
     return (
         <div className="App">

@@ -14,5 +14,5 @@ const envName = env === 'dev' ? 'dev' : 'prod'
 const configToUse = envName === 'dev' ? fireBaseDev : fireBaseProd
 
 export const fireBase = initializeApp(configToUse);
-export const serviceWorkerPath = `${protocol}//${host}${pathname}/firebase-messaging-sw.${envName}.js`
+export const serviceWorkerPath = (version) => `${protocol}//${host}${pathname}/firebase-messaging-sw.${version}.js`
 
