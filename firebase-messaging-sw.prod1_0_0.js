@@ -39,7 +39,7 @@ messaging.onBackgroundMessage((payload) => {
         ]
     };
 
-    closeAllNotifications()
+    // closeAllNotifications()
     self.registration.showNotification(title, notificationOptions);
 });
 
