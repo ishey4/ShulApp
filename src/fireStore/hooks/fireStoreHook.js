@@ -20,20 +20,9 @@ export const useFireStore = (UID) => {
     });
   }, []);
 
-  const setValue = (data, sendImmediately = false) => {
-
-    if (!sendImmediately) {
-      clearTimeout(debounce);
-      const deb = setTimeout(() => {
-        setDoc(docRef, data, { merge: true });
-      }, 300);
-
-      setDebounce(deb);
-
-    } else {
-      return setDoc(docRef, data, { merge: true });
-    }
-  };
+  const setValue = (incomingData) => {
+    return setDoc(docRef, incomingData, { merge: true });
+  }
 
   const isAdmin = data?.adminIds?.includes(getId())
 

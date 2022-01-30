@@ -24,8 +24,6 @@ export const AppContextComponent = ({ children }) => {
   const value = { app: sharedAppHook, user: sharedFireStoreHook }
 
   const isLoading = sharedAppHook.isLoading || sharedFireStoreHook.isLoading
-  console.log("contextData", { app: sharedAppHook, user: sharedFireStoreHook, isLoading })
-
 
   return <AppContext.Provider value={value}>
     {!isLoading && children}

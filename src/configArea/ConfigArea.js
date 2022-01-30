@@ -1,13 +1,20 @@
 import { useContext } from "react";
+import moment from "moment";
+
+import { AppContext } from '../contexts/appContext/appContext'
 
 import { FireBaseNumberBox } from "../fireStore/Components/FireBaseNumberBox";
 import { FireBaseTextBox } from "../fireStore/Components/FireBaseTextBox";
-import { AppContext } from '../contexts/appContext/appContext'
+import { useProcessActions } from "../fireStore/hooks/processAction";
+import { useCheckVersion } from '../fireStore/hooks/checkVersion'
 
 import { useNotification } from "../fireStore/hooks/notificationHook";
 
 
 export const ConfigArea = () => {
+  const date = moment(new Date()).format("MM/DD/YYYY");
+  useProcessActions(date);
+  useCheckVersion()
 
   const { app: { isAdmin } = {}, user: { data: { showNames } = {}, setValue } = {} } = useContext(AppContext)
   const { setNotifications, isSupported, isRegistered, isLoading } = useNotification();
