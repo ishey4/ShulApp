@@ -9,6 +9,7 @@ export const FireStoreButton = ({ prayer, date, value, id, count }) => {
 
   const { people, attendance } = useGetAttendance(date, prayer, value);
 
+  const { showNames } = data
   const { Count, value: myValue } = data?.[date]?.[prayer] || {}
   const myAttendance = Count || 1
 
@@ -24,9 +25,10 @@ export const FireStoreButton = ({ prayer, date, value, id, count }) => {
     <button onClick={onClick} className={className}>
       {value} ({displayAttendance}) {isSelected && `+ ${myAttendance || 1}` || ''}
     </button>
-    <div className="peopleList">
+
+    {showNames && <div className="peopleList">
       {people.map(({ Name, Phone, ...rest }) => <PhoneLink phoneNumber={Phone}>{Name} ({rest?.[date]?.[prayer]?.Count || 1})</PhoneLink>)}
-    </div>
+    </div>}
   </div>
   );
 };

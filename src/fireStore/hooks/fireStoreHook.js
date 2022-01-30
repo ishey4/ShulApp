@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { getFirestore, collection, doc, setDoc, onSnapshot } from "firebase/firestore";
 
 import { fireBase } from "../../fireBase";
+import { getId } from "../../utils/getId";
 
 export const useFireStore = (UID) => {
   const [debounce, setDebounce] = useState();
@@ -38,5 +39,7 @@ export const useFireStore = (UID) => {
     }
   };
 
-  return { data, setValue, updateData, isLoading };
+  const isAdmin = data?.adminIds?.includes(getId())
+
+  return { data, setValue, updateData, isLoading, isAdmin };
 };

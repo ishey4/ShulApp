@@ -51,6 +51,7 @@ button.selected {
 .notifications {
   display: flex;
   justify-content: space-around;
+  flex-direction: column;
 }
 
 .notifications button {
@@ -58,6 +59,7 @@ button.selected {
   margin: 0 auto;
   font-size: 20px;
   font-weight: bold;
+  margin: 10px 0;
 }
 
 .configGroup {

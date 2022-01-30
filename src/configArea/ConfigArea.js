@@ -1,5 +1,6 @@
 import { FireBaseNumberBox } from "../fireStore/Components/FireBaseNumberBox";
 import { FireBaseTextBox } from "../fireStore/Components/FireBaseTextBox";
+import { useFireStore } from "../fireStore/hooks/fireStoreHook";
 
 import { useNotification } from "../fireStore/hooks/notificationHook";
 
@@ -7,6 +8,9 @@ import { useNotification } from "../fireStore/hooks/notificationHook";
 export const ConfigArea = ({ UID: id }) => {
 
   const { setNotifications, isSupported, isRegistered, isLoading } = useNotification(id);
+  const { data: { showNames }, setValue } = useFireStore(id);
+  const { isAdmin } = useFireStore('appInfo')
+
   const buttonText = isRegistered
     ? "Disable Notifications"
     : "Enable Notifications";
@@ -21,11 +25,17 @@ export const ConfigArea = ({ UID: id }) => {
       <div>Count: <FireBaseNumberBox field="Count" placeholder="Attendees" UID={id} /></div>
     </div>
     <div className={`notifications ${selectedClass} ${isLoadingClass}`}>
+
       {isSupported && (
         <button disabled={isLoading} onClick={() => setNotifications(!isRegistered)}>
           {buttonText}
         </button>
       )}
+
+      {isAdmin && <button onClick={() => setValue({ showNames: !showNames })} >
+        {showNames ? `Hide Names` : 'Show Names'}
+      </button>}
+
     </div>
   </div>
 }
