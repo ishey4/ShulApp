@@ -1,13 +1,14 @@
-import moment from "moment";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 
-import { useFireStore } from "./fireStoreHook";
+import { AppContext } from "../../contexts/appContext/appContext";
+
 import { useNotification } from './notificationHook'
 
 
-export const useCheckVersion = (UID) => {
-  const { data: appData } = useFireStore('appInfo');
-  const { setNotifications } = useNotification(UID)
+export const useCheckVersion = () => {
+  const { setNotifications } = useNotification()
+
+  const { app: { data: appData } } = useContext(AppContext)
 
   const { currentSWVersion } = appData || {}
 
@@ -22,5 +23,5 @@ export const useCheckVersion = (UID) => {
     });
 
 
-  }, [appData]);
+  }, [currentSWVersion]);
 };

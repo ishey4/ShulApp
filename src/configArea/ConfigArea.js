@@ -1,15 +1,16 @@
+import { useContext } from "react";
+
 import { FireBaseNumberBox } from "../fireStore/Components/FireBaseNumberBox";
 import { FireBaseTextBox } from "../fireStore/Components/FireBaseTextBox";
-import { useFireStore } from "../fireStore/hooks/fireStoreHook";
+import { AppContext } from '../contexts/appContext/appContext'
 
 import { useNotification } from "../fireStore/hooks/notificationHook";
 
 
-export const ConfigArea = ({ UID: id }) => {
+export const ConfigArea = () => {
 
-  const { setNotifications, isSupported, isRegistered, isLoading } = useNotification(id);
-  const { data: { showNames }, setValue } = useFireStore(id);
-  const { isAdmin } = useFireStore('appInfo')
+  const { app: { isAdmin } = {}, user: { data: { showNames } = {}, setValue } = {} } = useContext(AppContext)
+  const { setNotifications, isSupported, isRegistered, isLoading } = useNotification();
 
   const buttonText = isRegistered
     ? "Disable Notifications"
@@ -20,22 +21,27 @@ export const ConfigArea = ({ UID: id }) => {
 
   return <div className="configGroup">
     <div className="inputs">
-      <FireBaseTextBox field="Name" placeholder="Name" UID={id} />
-      <FireBaseTextBox field="Phone" placeholder="Phone #" UID={id} />
-      <div>Count: <FireBaseNumberBox field="Count" placeholder="Attendees" UID={id} /></div>
+      <FireBaseTextBox field="Name" placeholder="Name" />
+      <FireBaseTextBox field="Phone" placeholder="Phone #" />
+      <div>Count: <FireBaseNumberBox field="Count" placeholder="Attendees" /></div>
     </div>
-    <div className={`notifications ${selectedClass} ${isLoadingClass}`}>
 
-      {isSupported && (
-        <button disabled={isLoading} onClick={() => setNotifications(!isRegistered)}>
+    {isSupported && (
+      <div className={`notifications`}>
+        <button className={`${isLoadingClass}`} disabled={isLoading} onClick={() => setNotifications(!isRegistered)}>
           {buttonText}
         </button>
-      )}
+      </div>
+    )}
 
-      {isAdmin && <button onClick={() => setValue({ showNames: !showNames })} >
-        {showNames ? `Hide Names` : 'Show Names'}
-      </button>}
+    {isAdmin &&
+      <div className={`notifications`}>
 
-    </div>
+        <button onClick={() => setValue({ showNames: !showNames })} >
+          {showNames ? `Hide Names` : 'Show Names'}
+        </button>
+      </div>
+    }
+
   </div>
 }

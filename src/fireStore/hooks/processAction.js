@@ -1,14 +1,14 @@
 import moment from "moment";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 
-import { useFireStore } from "./fireStoreHook";
+import { AppContext } from '../../contexts/appContext/appContext'
 import { parseQueryString } from '../../utils/parseQueryString'
 import { stringifyQueryString } from '../../utils/stringifyQueryString'
 
 
-export const useProcessActions = (UID, date) => {
-  const { setValue } = useFireStore(UID);
 
+export const useProcessActions = (date) => {
+  const { user: { setValue } } = useContext(AppContext);
 
   useEffect(() => {
     const { action, minyan, dateOffset = 0, ...rest } = parseQueryString(window.location);

@@ -1,23 +1,29 @@
-import { useState, useEffect } from "react";
-
-import { serviceWorkerPath } from '../../fireBase'
+import { useState, useEffect, useContext } from "react";
 import {
   getMessaging,
   getToken as _getToken,
   isSupported,
 } from "firebase/messaging";
 
-import { useFireStore } from "./fireStoreHook";
 
-export const useNotification = (UID) => {
+import { AppContext } from '../../contexts/appContext/appContext'
+import { serviceWorkerPath } from '../../fireBase'
+
+
+export const useNotification = () => {
+  const { user, app } = useContext(AppContext);
+
   const {
     data: {
+      userSWVersion,
       notificationsEnabled,
       isLoading: fireBaseLoading
     } = {},
-    setValue } = useFireStore(UID);
+    setValue
+  } = user
 
-  const { data: { currentSWVersion } } = useFireStore('appInfo');
+  const { data: { currentSWVersion, isLoading: isDbLoading } = {} } = app;
+
 
   const [_isSupported, setIsSupported] = useState(false);
   const [isRegistered, setIsRegistered] = useState(false);
@@ -27,9 +33,11 @@ export const useNotification = (UID) => {
     navigator.serviceWorker.getRegistrations().then((registrations) => {
       const installedSWVersion = registrations?.[0]?.active?.scriptURL?.match?.(/(?:(prod|dev)[^\.]+)/g)[0]
 
-      setValue({ userSWVersion: installedSWVersion })
       setIsRegistered(!!registrations.length);
 
+      if (currentSWVersion && (userSWVersion != installedSWVersion || currentSWVersion != installedSWVersion)) {
+        setValue({ userSWVersion: installedSWVersion })
+      }
     });
 
   const enablePushNotifications = (serviceWorkerURL = '') => navigator.serviceWorker

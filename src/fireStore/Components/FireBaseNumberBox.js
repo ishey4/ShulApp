@@ -1,7 +1,9 @@
-import { useFireStore } from "../hooks/fireStoreHook";
+import { useContext } from "react";
 
-export const FireBaseNumberBox = ({ field, UID, placeholder, type = "number" }) => {
-  const { setValue, data } = useFireStore(UID);
+import { AppContext } from '../../contexts/appContext/appContext'
+
+export const FireBaseNumberBox = ({ field, placeholder, type = "number" }) => {
+  const { user: { setValue, data } } = useContext(AppContext);
 
   const val = data?.[field];
 

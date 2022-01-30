@@ -7,21 +7,18 @@ import { getId } from "../../utils/getId";
 export const useFireStore = (UID) => {
   const [debounce, setDebounce] = useState();
   const [data, setData] = useState({});
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
 
   const fireStore = getFirestore(fireBase);
   const coll = collection(fireStore, "shul");
   const docRef = doc(coll, UID);
 
-  const updateData = async () => {
-    setIsLoading(true);
+  useEffect(() => {
     onSnapshot(docRef, (doc) => {
       setData(doc.data());
       setIsLoading(false)
     });
-  };
-
-  useEffect(updateData, []);
+  }, []);
 
   const setValue = (data, sendImmediately = false) => {
 
@@ -32,7 +29,6 @@ export const useFireStore = (UID) => {
       }, 300);
 
       setDebounce(deb);
-      setData(data);
 
     } else {
       return setDoc(docRef, data, { merge: true });
@@ -41,5 +37,5 @@ export const useFireStore = (UID) => {
 
   const isAdmin = data?.adminIds?.includes(getId())
 
-  return { data, setValue, updateData, isLoading, isAdmin };
+  return { data, setValue, isLoading, isAdmin };
 };

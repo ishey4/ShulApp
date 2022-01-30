@@ -1,15 +1,16 @@
-import { FireStoreButton } from "../fireStore/Components/Button.js";
-import { getId } from "../utils/getId";
+import { useContext } from "react";
+
+import { AppContext } from "../contexts/appContext/appContext";
+import { FireStoreButton } from "../fireStore/Components/Button";
 import { dateToFormattedDate } from '../utils/dateToFormattedDate'
-import { useFireStore } from "../fireStore/hooks/fireStoreHook.js";
 
 const buttonValues = ['Yes', 'No', 'Maybe']
 
 export const Group = (props) => {
-  const { prayer, date, id } = props;
+  const { prayer, date } = props;
   const dateToDisplay = dateToFormattedDate(date)
 
-  const { data: { Count = 0 } = {} } = useFireStore(id)
+  const { user: { data: { Count = 0 } = {} } } = useContext(AppContext)
 
   return (
     <div className="group">

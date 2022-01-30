@@ -1,15 +1,19 @@
+import { useContext } from "react";
 import moment from "moment";
-import { useFireStore } from "../hooks/fireStoreHook";
+
+import { AppContext } from '../../contexts/appContext/appContext'
 import { useGetAttendance } from "../hooks/getAttendance";
 import { PhoneLink } from './Phone'
 
-export const FireStoreButton = ({ prayer, date, value, id, count }) => {
-  const { setValue, data } = useFireStore(id);
+
+export const FireStoreButton = ({ prayer, date, value, count }) => {
+  const { user: { setValue, data } } = useContext(AppContext);
+
   const currentTime = moment(new Date).format('YYYY-MM-DD HH:mm:ss')
 
   const { people, attendance } = useGetAttendance(date, prayer, value);
 
-  const { showNames } = data
+  const { showNames } = data || {}
   const { Count, value: myValue } = data?.[date]?.[prayer] || {}
   const myAttendance = Count || 1
 
